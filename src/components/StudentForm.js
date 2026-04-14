@@ -1,73 +1,90 @@
 import React, { useState } from "react";
 
-function StudentForm({onAdd}) {
-  const [formData, setFormData] = useState({
+function StudentForm({ onAdd }) {
+  const [amarAdmissionDraft, setAmarAdmissionDraft] = useState({
     name: "",
     age: "",
     course: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+  const handleFieldRefresh = (event) => {
+    const { name, value } = event.target;
+
+    setAmarAdmissionDraft({
+      ...amarAdmissionDraft,
+      [name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleAdmissionSubmit = (event) => {
+    event.preventDefault();
 
-    if (!formData.name || !formData.age || !formData.course) {
-      alert("Please fill all fields");
+    if (
+      !amarAdmissionDraft.name ||
+      !amarAdmissionDraft.age ||
+      !amarAdmissionDraft.course
+    ) {
+      alert("Please fill all fields. Amar's form checker found something missing.");
       return;
     }
+
+    const polishedStudentCard = {
+      ...amarAdmissionDraft,
+      age: Number(amarAdmissionDraft.age),
+    };
+
+    console.log(
+      "Amar form tracker -> candidate: " + polishedStudentCard.name
+    );
+
     onAdd({
-        ...formData,
-        age: Number(formData.age)
+      ...polishedStudentCard,
     });
-    setFormData({
+
+    setAmarAdmissionDraft({
       name: "",
       age: "",
       course: "",
     });
-
-    console.log(formData);
   };
 
   return (
     <div>
       <h2>Add Student</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleAdmissionSubmit}>
         <input
           type="text"
           name="name"
           placeholder="Enter Name"
-          value={formData.name}
-          onChange={handleChange}
+          value={amarAdmissionDraft.name}
+          onChange={handleFieldRefresh}
         />
 
-        <br /><br />
+        <br />
+        <br />
 
         <input
           type="number"
           name="age"
           placeholder="Enter Age"
-          value={formData.age}
-          onChange={handleChange}
+          value={amarAdmissionDraft.age}
+          onChange={handleFieldRefresh}
         />
 
-        <br /><br />
+        <br />
+        <br />
 
         <input
           type="text"
           name="course"
           placeholder="Enter Course"
-          value={formData.course}
-          onChange={handleChange}
+          value={amarAdmissionDraft.course}
+          onChange={handleFieldRefresh}
         />
 
-        <br /><br />
+        <br />
+        <br />
 
         <button type="submit">Add Student</button>
       </form>

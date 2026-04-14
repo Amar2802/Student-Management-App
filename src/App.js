@@ -2,59 +2,67 @@ import React, { useState } from "react";
 import StudentForm from "./components/StudentForm";
 
 function App() {
-  const [students, setStudents] = useState([]);
-  const [clickCount, setClickCount] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [amarStudentRegistry, setAmarStudentRegistry] = useState([]);
+  const [amarButtonTapTotal, setAmarButtonTapTotal] = useState(0);
+  const [amarIsSavingRecord, setAmarIsSavingRecord] = useState(false);
 
-  // Fake API using Promise
-  const simulateApi = (student) => {
-    setLoading(true);
+  const simulateEnrollmentDesk = (freshStudentProfile) => {
+    setAmarIsSavingRecord(true);
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(student);
-        setLoading(false);
+        console.log(
+          `Amar enrollment desk accepted ${freshStudentProfile.name} for review.`
+        );
+        resolve(freshStudentProfile);
+        setAmarIsSavingRecord(false);
       }, 1000);
     });
   };
 
-  // Add student
-  const registerLearner = async (studentData) => {
-    if (studentData.age < 18) {
-      alert("Student must be above 18");
+  const registerLearner = async (incomingLearnerProfile) => {
+    if (incomingLearnerProfile.age < 18) {
+      alert(
+        "Enrollment blocked: Amar's policy needs learners to be 18 or older."
+      );
       return;
     }
 
-    const response = await simulateApi(studentData);
+    const verifiedEnrollmentCard = await simulateEnrollmentDesk(
+      incomingLearnerProfile
+    );
 
-    setStudents((prev) => [...prev, response]);
+    setAmarStudentRegistry((previousRegistry) => [
+      ...previousRegistry,
+      verifiedEnrollmentCard,
+    ]);
   };
 
-  // Filter students (Age > 18)
-  const filteredStudents = students.filter(
-    (student) => student.age > 18
+  const amarEligibleLearners = amarStudentRegistry.filter(
+    (registeredLearner) => registeredLearner.age > 18
   );
 
   return (
     <div>
-      <h1>🎓 Student Management System</h1>
+      <h1>Student Management System</h1>
 
-      {/* Click Counter */}
-      <button onClick={() => setClickCount(clickCount + 1)}>
-        Click Count: {clickCount}
+      <button onClick={() => setAmarButtonTapTotal(amarButtonTapTotal + 1)}>
+        {"Click Count: " + amarButtonTapTotal}
       </button>
 
-      {loading && <p>Loading...</p>}
+      {amarIsSavingRecord && (
+        <p>{`Loading... Amar is saving a student record.`}</p>
+      )}
 
       <StudentForm onAdd={registerLearner} />
 
       <h2>Student List</h2>
 
-      {filteredStudents.map((student, index) => (
-        <div key={index}>
-          <p>Name: {student.name}</p>
-          <p>Age: {student.age}</p>
-          <p>Course: {student.course}</p>
+      {amarEligibleLearners.map((campusLearner, learnerPosition) => (
+        <div key={learnerPosition}>
+          <p>{`Name: ${campusLearner.name}`}</p>
+          <p>{"Age: " + campusLearner.age}</p>
+          <p>{`Course: ${campusLearner.course}`}</p>
           <hr />
         </div>
       ))}
