@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [https://github.com/facebook/create-react-app).
 
-Live Demo link- [https://amar2802.github.io/Student-Management-App/]
+Live Demo link- [https://student-management-i1bivgfrm-devilamar44-2679s-projects.vercel.app/]
 ## Available Scripts
 
 In the project directory, you can run:
